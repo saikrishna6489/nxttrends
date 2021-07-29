@@ -8,3 +8,34 @@
 .cart-img {
   width: 150px;
 }
+.cart-items-container {
+  display: flex;
+  flex-direction: column;
+}
+.cart-items-section {
+  width: 77%;
+  margin: auto;
+  margin-top: 35px;
+}
+.order-total-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0% 13%;
+}
+.order-total-section {
+}
+.order-total {
+  font-size: 24px;
+  margin-bottom: 3px;
+}
+.total-items-cart {
+  margin-top: 0px;
+  margin-bottom: 23px;
+}
+.check-out-btn {
+  width: 100%;
+  padding: 10px 0px;
+  background: blue;
+  border: none;
+  color: white;
+}

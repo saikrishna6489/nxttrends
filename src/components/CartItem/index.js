@@ -4,43 +4,25 @@ import {BsPlusSquare, BsDashSquare} from 'react-icons/bs'
 import {AiFillDelete} from 'react-icons/ai'
 
 class CartItem extends Component {
-  state = {
-    quantity: 1,
-  }
-
-  onDecrementQuantity = () => {
-    const {quantity} = this.state
-    if (quantity > 1) {
-      this.setState(prevState => ({quantity: prevState.quantity - 1}))
-    }
-  }
-
-  onIncrementQuantity = () => {
-    this.setState(prevState => ({quantity: prevState.quantity + 1}))
-  }
-
   render() {
-    const {cartItemData} = this.props
-    const {quantity} = this.state
+    const {cartItemData, removeFromCart, changeQuantityOfCartItem} = this.props
+    const {imageUrl, price, quantity, title, brand} = cartItemData
+    const totalPrice = price * quantity
     return (
       <>
         <div className="cart-item-container">
           <div className="cart-item-details-section">
-            <img
-              src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-cart-img.png"
-              alt="cart"
-              className="cart-item-img"
-            />
+            <img src={imageUrl} alt="cart" className="cart-item-img" />
             <div className="cart-item-details">
-              <p className="cart-item-name">Hair Dyer</p>
-              <p className="cart-item-company">By Philips</p>
+              <p className="cart-item-name">{title}</p>
+              <p className="cart-item-company">By {brand}</p>
             </div>
           </div>
           <div className="quantity-container cart-quantity-container">
             <button
               type="button"
               className="quantity-controller-button"
-              onClick={this.onDecrementQuantity}
+              onClick={() => changeQuantityOfCartItem(cartItemData.id, 'Dec')}
               testid="minus"
             >
               <BsDashSquare className="quantity-controller-icon" />
@@ -49,15 +31,19 @@ class CartItem extends Component {
             <button
               type="button"
               className="quantity-controller-button"
-              onClick={this.onIncrementQuantity}
+              onClick={() => changeQuantityOfCartItem(cartItemData.id, 'Inc')}
               testid="plus"
             >
               <BsPlusSquare className="quantity-controller-icon" />
             </button>
           </div>
           <div className="cart-item-price-delete">
-            <p className="cart-item-price">Rs 760/- </p>
-            <button className="cart-item-delete" type="button">
+            <p className="cart-item-price">Rs {totalPrice}/- </p>
+            <button
+              className="cart-item-delete"
+              type="button"
+              onClick={() => removeFromCart(cartItemData)}
+            >
               <AiFillDelete />
             </button>
           </div>

@@ -18,7 +18,46 @@ class App extends Component {
   }
 
   addToCart = cartItem => {
-    this.setState(prevState => ({cartData: [...prevState.cartData, cartItem]}))
+    const {cartData} = this.state
+    let itemFound = false
+    let modifiedData = cartData.map(eachData => {
+      if (cartItem.id === eachData.id) {
+        itemFound = true
+        return {...eachData, quantity: eachData.quantity + cartItem.quantity}
+      }
+      return eachData
+    })
+    if (!itemFound) {
+      modifiedData = [...modifiedData, cartItem]
+    }
+    this.setState({cartData: modifiedData})
+  }
+
+  removeFromCart = cartItem => {
+    const {cartData} = this.state
+    const modifiedData = cartData.filter(
+      eachData => eachData.id !== cartItem.id,
+    )
+    this.setState({cartData: modifiedData})
+  }
+
+  changeQuantityOfCartItem = (id, changeOrder) => {
+    const {cartData} = this.state
+    const modifiedData = cartData.map(eachItem => {
+      if (eachItem.id === id) {
+        const {quantity} = eachItem
+        let item = eachItem
+        if (changeOrder === 'Inc') {
+          item = {...eachItem, quantity: eachItem.quantity + 1}
+        } else if (quantity > 1) {
+          item = {...eachItem, quantity: eachItem.quantity - 1}
+        }
+        return item
+      }
+      return eachItem
+    })
+
+    this.setState({cartData: [...modifiedData]})
   }
 
   render() {
@@ -26,22 +65,27 @@ class App extends Component {
     return (
       <>
         <CartContext.Provider
-          value={{cartData, changeLanguage: this.changeLanguage}}
-        />
-
-        <Switch>
-          <Route exact path="/login" component={LoginForm} />
-          <ProtectedRoute exact path="/" component={Home} />
-          <ProtectedRoute exact path="/products" component={Products} />
-          <ProtectedRoute
-            exact
-            path="/products/:id"
-            component={ProductItemDetails}
-          />
-          <ProtectedRoute exact path="/cart" component={Cart} />
-          <Route path="/not-found" component={NotFound} />
-          <Redirect to="not-found" />
-        </Switch>
+          value={{
+            cartData,
+            addToCart: this.addToCart,
+            removeFromCart: this.removeFromCart,
+            changeQuantityOfCartItem: this.changeQuantityOfCartItem,
+          }}
+        >
+          <Switch>
+            <Route exact path="/login" component={LoginForm} />
+            <ProtectedRoute exact path="/" component={Home} />
+            <ProtectedRoute exact path="/products" component={Products} />
+            <ProtectedRoute
+              exact
+              path="/products/:id"
+              component={ProductItemDetails}
+            />
+            <ProtectedRoute exact path="/cart" component={Cart} />
+            <Route path="/not-found" component={NotFound} />
+            <Redirect to="not-found" />
+          </Switch>
+        </CartContext.Provider>
       </>
     )
   }
